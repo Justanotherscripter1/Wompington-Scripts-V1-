@@ -35,10 +35,18 @@ local MAX_DISTANCE = 245
 local MIN_DISTANCE = 0
 local triggerbotEnabled = false
 local aimbotMode = "Distance"
-local spamming = false
-local customMessage = ""
+--local spamming = false
+--local customMessage = ""
+--^broken atm^
+local Tracers = false
 
--- Debug Mode (bro thinks he a dev fr)
+--preamble definitions (folders and shit yk)
+local tracerFolder = Instance.new("Folder", game.CoreGui)
+tracerFolder.Name = "Wompington_ESP_Tracers"
+
+
+
+--// Debug Mode (dunno what this is, RF docs said to enable it.)
 debugX = true
 
 --// UI Loader
@@ -307,7 +315,8 @@ local GodmodeToggle = MoveTab:CreateToggle({
         end
     end
 })
-
+--[[
+useless
 local Rename = MoveTab:CreateInput({
    Name = "Name",
    CurrentValue = tostring(game:GetService("Players").LocalPlayer.Name),
@@ -327,7 +336,7 @@ end
    end,
 })
 
-
+]]
 
 --// Fun Section
 local SpinToggle = FunTab:CreateToggle({
@@ -374,7 +383,7 @@ local function stopChatSpam()
 end
 
 local CSpamTgl = FunTab:CreateToggle({
-   Name = "Chat Spam",
+   Name = "Chat Spam - BROKEN!!!!!",
    CurrentValue = false,
    Flag = "CSpam", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Value)
@@ -712,6 +721,65 @@ RunService.RenderStepped:Connect(function()
         end
     end
 end)
+
+local function createTracer(player)
+    local tracer = Drawing.new("Line")
+    tracer.Thickness = 1.5
+    tracer.Color = Color3.new(1, 0, 0)
+    tracer.Transparency = 1
+
+    local conn
+    conn = RunService.RenderStepped:Connect(function()
+        if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
+            tracer.Visible = false
+            return
+        end
+
+        local pos, onScreen = camera:WorldToViewportPoint(player.Character.HumanoidRootPart.Position)
+        if onScreen then
+            tracer.From = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y)
+            tracer.To = Vector2.new(pos.X, pos.Y)
+            tracer.Visible = true
+        else
+            tracer.Visible = false
+        end
+    end)
+
+    return {tracer = tracer, disconnect = function() conn:Disconnect(); tracer:Remove() end}
+end
+
+
+local activeTracers = {}
+for _, player in pairs(game.Players:GetPlayers()) do
+    if player ~= game.Players.LocalPlayer then
+        table.insert(activeTracers, createTracer(player))
+    end
+end
+
+-- AUTO-CLEANUP
+game.Players.PlayerRemoving:Connect(function(leaver)
+    for i, tracer in pairs(activeTracers) do
+        if tracer.player == leaver then
+            tracer.disconnect()
+            table.remove(activeTracers, i)
+        end
+    end
+end)
+
+-- CLEANUP ON LEAVE/RESET
+game:BindToClose(function()
+    for _, t in pairs(activeTracers) do
+        t.disconnect()
+    end
+end)
+
+--manual cleanup func, unused
+function removeAllTracers()
+    for _, t in pairs(activeTracers) do
+        t.disconnect()
+    end
+    activeTracers = {}
+end
 
 
 --// Load last config
