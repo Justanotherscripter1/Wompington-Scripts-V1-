@@ -748,8 +748,9 @@ local function createTracer(player)
     return {tracer = tracer, disconnect = function() conn:Disconnect(); tracer:Remove() end}
 end
 
-
+--active
 local activeTracers = {}
+if not esp or not Tracers then return end
 for _, player in pairs(game.Players:GetPlayers()) do
     if player ~= game.Players.LocalPlayer then
         table.insert(activeTracers, createTracer(player))
@@ -773,7 +774,7 @@ game:BindToClose(function()
     end
 end)
 
---manual cleanup func, unused
+-- Optional manual cleanup button:
 function removeAllTracers()
     for _, t in pairs(activeTracers) do
         t.disconnect()
