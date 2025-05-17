@@ -10,7 +10,8 @@
 
 
 
---// Wompington Universal Hub v1
+--// Wompington Universal Hub v1.5
+   --|cat facts update: shows a cat fact in credits.
 --// in the wise words of TheRussianBadger:
 --// "Built Different, Built STUPID."
 --// fair warning to any future security analysts, this is cursed as FUCK.
@@ -92,7 +93,13 @@ local FunTab = Window:CreateTab("Fun/Misc", "dices")
 
 --//credits
 local Names = CreditsTab:CreateLabel("Made By MrWompington (@stardestroyer89 on discord, tarnished_remnant on roblox)", "user-round", Color3.fromRGB(255, 75, 255), false) -- Title, Icon, Color, IgnoreTheme
-local vers = CreditsTab:CreateLabel("You Are Using Wompington Universal V1", "info", Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+local vers = CreditsTab:CreateLabel("You Are Using Wompington Universal V1", "info", Color3.fromRGB(175, 175, 175), false) -- Title, Icon, Color, IgnoreTheme
+
+local FetchCF = game:HttpGet('https://raw.githubusercontent.com/Justanotherscripter1/Wompington-Scripts-V1-/refs/heads/main/catfact.lua')
+local catFactModule = loadstring(FetchCF)()
+local fact = catFactModule:GetFact()
+
+local CFact = CreditsTab:CreateLabel("Cat Fact: " .. tostring(fact))
 
 
 --// Aimbot Section
