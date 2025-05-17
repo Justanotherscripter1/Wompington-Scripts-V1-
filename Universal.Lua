@@ -128,6 +128,14 @@ local AimFor = AimbotTab:CreateDropdown({
          aimForHead = false  -- Set to false if "Torso" is selected
       end
       print("[Wompington Industries] Aiming for: " .. (aimForHead and "HEADS 🎯" or "TORSOS 💥"))
+local status = (aimforhead == true) and "heads" or "torsos"
+
+Rayfield:Notify({
+   Title = "Aiming for " .. status,
+   Content = "Aiming at" .. tostring(aimforhead == true) and "heads" or "torsos"),
+   Duration = 2.5,
+   Image = "crosshair",
+})
    end
 })
 
