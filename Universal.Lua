@@ -183,12 +183,15 @@ local AimbotBind = AimbotTab:CreateKeybind({
        aimbotEnabled = not aimbotEnabled
     Rayfield.Flags["AimbotLegit"]:Set(aimbotEnabled)
     print("[Wompington Industries] Aimbot toggled manually!")
+local status = (aimbotEnabled == true) and "enabled" or "disabled"
+
 Rayfield:Notify({
-   Title = "Aimbot " .. (aimbotEnabled and "enabled" or "disabled"),
+   Title = "Aimbot " .. status,
    Content = "Aimbot toggled to: " .. tostring(aimbotEnabled),
    Duration = 2.5,
    Image = "crosshair",
 })
+
 
 
     end,
