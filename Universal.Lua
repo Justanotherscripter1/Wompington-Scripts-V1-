@@ -132,10 +132,11 @@ local status = (aimforhead == true) and "heads" or "torsos"
 
 Rayfield:Notify({
    Title = "Aiming for " .. status,
-   Content = "Aiming at" .. tostring(aimforhead == true) and "heads" or "torsos"),
+   Content = "Aiming at " .. status,
    Duration = 2.5,
    Image = "crosshair",
 })
+
    end
 })
 
