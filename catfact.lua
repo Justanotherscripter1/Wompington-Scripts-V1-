@@ -13,12 +13,12 @@ function CatFactFetcher:GetFact()
     end
 
     local success, response = pcall(function()
-        return HttpService:GetAsync("https://cat-fact.herokuapp.com/facts/random")
+        return HttpService:GetAsync("https://catfact.ninja/fact")
     end)
 
     if success then
         local data = HttpService:JSONDecode(response)
-        local fact = data.text or "Cats are mysterious creatures."
+        local fact = data.fact or "Cats are mysterious creatures."
         self._cache = fact
         self._cacheTime = now
         return fact
