@@ -99,7 +99,7 @@ local FetchCF = game:HttpGet('https://raw.githubusercontent.com/Justanotherscrip
 local catFactModule = loadstring(FetchCF)()
 local fact = catFactModule:GetFact()
 
-local CFact = CreditsTab:CreateLabel("Cat Fact: " .. tostring(fact))
+local CFact = CreditsTab:CreateLabel("Cat Fact: " .. tostring(fact), "cat")
 
 
 --// Aimbot Section
