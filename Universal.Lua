@@ -1,15 +1,3 @@
---Latest version i have on hand
-
-
-
-
-
-
-
-
-
-
-
 --// Wompington Universal Hub v1.5
    --|cat facts update: shows a cat fact in credits.
 --// in the wise words of TheRussianBadger:
@@ -95,13 +83,13 @@ local FunTab = Window:CreateTab("Fun/Misc", "dices")
 local Names = CreditsTab:CreateLabel("Made By MrWompington (@stardestroyer89 on discord, tarnished_remnant on roblox)", "user-round", Color3.fromRGB(255, 75, 255), false) -- Title, Icon, Color, IgnoreTheme
 local vers = CreditsTab:CreateLabel("You Are Using Wompington Universal V1", "info", Color3.fromRGB(175, 175, 175), false) -- Title, Icon, Color, IgnoreTheme
 
+repeat task.wait() until CreditsTab
+
 local FetchCF = game:HttpGet('https://raw.githubusercontent.com/Justanotherscripter1/Wompington-Scripts-V1-/refs/heads/main/catfact.lua')
 local catFactModule = loadstring(FetchCF)()
 local fact = catFactModule:GetFact()
 
 local CF = CreditsTab:CreateParagraph({Title = "Cat Fact :3", Content = tostring(fact)})
-CF:Set({Title = "Cat Fact :3", Content = tostring(fact)})
-
 
 --// Aimbot Section
 AimbotTab:CreateSection("Legit")
