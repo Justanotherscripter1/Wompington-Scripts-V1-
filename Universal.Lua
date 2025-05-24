@@ -243,15 +243,6 @@ local FulbrightToggle = VisTab:CreateToggle({
 })
 
 VisTab:CreateToggle({
-    Name = "Mouse Tracers",
-    CurrentValue = false,
-    Flag = "MouseTracers",
-    Callback = function(Value)
-        tracersEnabled = Value
-    end,
-})
-
-VisTab:CreateToggle({
     Name = "Head Circles",
     CurrentValue = false,
     Flag = "HeadCircles",
@@ -785,7 +776,7 @@ end
 
 -- Hook this up to your UI toggle callback:
 -- Example using Rayfield (adjust according to your UI lib):
-FunTab:CreateToggle({
+VisTab:CreateToggle({
     Name = "Enable Tracers",
     CurrentValue = Tracers,
     Callback = function(value)
