@@ -783,7 +783,7 @@ activeTracers = {}
 
 -- Create tracers for all players except local player
 for _, player in pairs(Players:GetPlayers()) do
-    if player ~= LocalPlayer then
+    if player ~= LocalPlayer and Tracers then
         table.insert(activeTracers, createTracer(player))
     end
 end
