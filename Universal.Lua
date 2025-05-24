@@ -779,14 +779,6 @@ local function updateTracers()
     end
 end
 
-RunService.RenderStepped:Connect(function()
-    if Tracers then
-        updateTracers()
-    else
-        removeTracers()
-    end
-end)
-
 
 VisTab:CreateToggle({
     Name = "Enable Tracers",
