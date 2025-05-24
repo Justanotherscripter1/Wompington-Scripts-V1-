@@ -105,16 +105,6 @@ local Aimbot = AimbotTab:CreateToggle({
 })
 
 
-local TeamCheckToggle = AimbotTab:CreateToggle({
-    Name = "Team Check (Ignore Teammates)",
-    CurrentValue = true,
-    Flag = "TeamCheck",
-    Callback = function(Value)
-        teamCheckEnabled = Value
-        print("[Wompington Industries] Team Check is now " .. (teamCheckEnabled and "ENABLED" or "DISABLED"))
-    end,
-})
-
 
 local AimFor = AimbotTab:CreateDropdown({
    Name = "Aim For: ",
@@ -441,9 +431,6 @@ local function isEnemy(player)
 end
 
 local function getClosestEnemy()
-if teamCheckEnabled and player.Team ~= LocalPlayer.Team then
-    continue
-end
     local closestPlayer, bestMetric = nil, math.huge
     for _, player in ipairs(Players:GetPlayers()) do
         if player ~= LocalPlayer and player.Character and isEnemy(player) then
