@@ -100,6 +100,7 @@ local catFactModule = loadstring(FetchCF)()
 local fact = catFactModule:GetFact()
 
 local CF = Tab:CreateParagraph({Title = "Cat Fact :3", Content = tostring(fact)})
+CF:Set({Title = "Cat Fact :3", Content = tostring(fact)})
 
 
 --// Aimbot Section
