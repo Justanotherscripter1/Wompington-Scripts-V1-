@@ -95,7 +95,7 @@ local CF = CreditsTab:CreateParagraph({Title = "Cat Fact :3", Content = tostring
 AimbotTab:CreateSection("Legit")
 
 local Aimbot = AimbotTab:CreateToggle({
-   Name = "Aimbot (toggle with LeftAlt)",
+   Name = "Aimbot (toggle with Aimbot bind)",
    CurrentValue = aimbotEnabled,
    Flag = "AimbotLegit",
    Callback = function(Value)
@@ -103,6 +103,18 @@ local Aimbot = AimbotTab:CreateToggle({
        print("[Wompington Industries] Aimbot is now " .. (aimbotEnabled and "ON" or "OFF"))
    end,
 })
+
+
+local TeamCheckToggle = AimbotTab:CreateToggle({
+    Name = "Team Check (Ignore Teammates)",
+    CurrentValue = true,
+    Flag = "TeamCheck",
+    Callback = function(Value)
+        teamCheckEnabled = Value
+        print("[Wompington Industries] Team Check is now " .. (teamCheckEnabled and "ENABLED" or "DISABLED"))
+    end,
+})
+
 
 local AimFor = AimbotTab:CreateDropdown({
    Name = "Aim For: ",
@@ -429,6 +441,9 @@ local function isEnemy(player)
 end
 
 local function getClosestEnemy()
+if teamCheckEnabled and player.Team ~= LocalPlayer.Team then
+    continue
+end
     local closestPlayer, bestMetric = nil, math.huge
     for _, player in ipairs(Players:GetPlayers()) do
         if player ~= LocalPlayer and player.Character and isEnemy(player) then
@@ -510,6 +525,8 @@ RunService.RenderStepped:Connect(function()
         end
     end
 end)
+
+
 
 local function createESP(player)
     if player == LocalPlayer then return end
@@ -644,6 +661,7 @@ jump.Callback = function(Value)
 end
 
 
+
 --// triggrbot 
 RunService.RenderStepped:Connect(function()
     if triggerbotEnabled then
@@ -774,8 +792,15 @@ local function updateTracers()
     end
 end
 
--- Hook this up to your UI toggle callback:
--- Example using Rayfield (adjust according to your UI lib):
+RunService.RenderStepped:Connect(function()
+    if Tracers then
+        updateTracers()
+    else
+        removeTracers()
+    end
+end)
+
+
 VisTab:CreateToggle({
     Name = "Enable Tracers",
     CurrentValue = Tracers,
