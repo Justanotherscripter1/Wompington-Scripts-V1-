@@ -13,7 +13,7 @@ function CatFactFetcher:GetFact()
     end
 
     local success, response = pcall(function()
-        return HttpService:GetAsync("https://catfact.ninja/fact")
+        return game:HttpGet("https://catfact.ninja/fact", true)
     end)
 
     if success then
