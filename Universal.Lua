@@ -736,61 +736,67 @@ RunService.RenderStepped:Connect(function()
         end
     end
 end)
-
 local activeTracers = {}
 
-local function createTracer(targetPlayer)
-    local tracerLine = Drawing.new("Line")
-    tracerLine.Thickness = 1.5
-    tracerLine.Color = Color3.new(1, 0, 0)
-    tracerLine.Transparency = 1
-    tracerLine.Visible = false
+local function createTracer(player)
+    local tracer = Drawing.new("Line")
+    tracer.Thickness = 1.5
+    tracer.Color = Color3.fromRGB(255, 0, 0)
+    tracer.Transparency = 1
+    tracer.Visible = false
 
     local conn
     conn = RunService.RenderStepped:Connect(function()
-        if not targetPlayer.Character or not targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            tracerLine.Visible = false
+        if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
+            tracer.Visible = false
             return
         end
 
-        local rootPart = targetPlayer.Character.HumanoidRootPart
-        local pos, onScreen = Camera:WorldToViewportPoint(rootPart.Position)
-
-        if onScreen then
-            tracerLine.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
-            tracerLine.To = Vector2.new(pos.X, pos.Y)
-            tracerLine.Visible = true
+        local pos, onScreen = Camera:WorldToViewportPoint(player.Character.HumanoidRootPart.Position)
+        if onScreen and Tracers then
+            tracer.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
+            tracer.To = Vector2.new(pos.X, pos.Y)
+            tracer.Visible = true
         else
-            tracerLine.Visible = false
+            tracer.Visible = false
         end
     end)
 
-    return {
-        tracer = tracerLine,
-        disconnect = function()
-            conn:Disconnect()
-            tracerLine:Remove()
-        end,
-        player = targetPlayer
-    }
+    return {player = player, tracer = tracer, disconnect = function() conn:Disconnect(); tracer:Remove() end}
 end
 
--- Clear existing tracers if any
-for _, t in pairs(activeTracers) do
-    t.disconnect()
+local function removeAllTracers()
+    for _, t in pairs(activeTracers) do
+        t.disconnect()
+    end
+    activeTracers = {}
 end
-activeTracers = {}
 
--- Create tracers for all players except local player
-for _, player in pairs(Players:GetPlayers()) do
-    if player ~= LocalPlayer and Tracers then
-        table.insert(activeTracers, createTracer(player))
+local function updateTracers()
+    removeAllTracers()
+    if Tracers then
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer then
+                table.insert(activeTracers, createTracer(player))
+            end
+        end
     end
 end
 
--- Remove tracer when a player leaves
+-- Hook this up to your UI toggle callback:
+-- Example using Rayfield (adjust according to your UI lib):
+FunTab:CreateToggle({
+    Name = "Enable Tracers",
+    CurrentValue = Tracers,
+    Callback = function(value)
+        Tracers = value
+        updateTracers()
+    end
+})
+
+-- Cleanup on player leaving
 Players.PlayerRemoving:Connect(function(leaver)
-    for i, tracerData in ipairs(activeTracers) do
+    for i, tracerData in pairs(activeTracers) do
         if tracerData.player == leaver then
             tracerData.disconnect()
             table.remove(activeTracers, i)
@@ -799,12 +805,8 @@ Players.PlayerRemoving:Connect(function(leaver)
     end
 end)
 
--- Clean up on script unload or game close
-game:BindToClose(function()
-    for _, tracerData in pairs(activeTracers) do
-        tracerData.disconnect()
-    end
-end)
+-- Cleanup on game close/reset
+game:BindToClose(removeAllTracers)
 --// Load last config
 Rayfield:LoadConfiguration()
 
